@@ -1,6 +1,6 @@
 # Script to push each file individually to GitHub
 
-$repoPath = "C:\Users\Administrator\Music\latexv"
+$repoPath = "C:\Users\Administrator\Music\Particl"
 Set-Location $repoPath
 
 # Get all untracked and modified files

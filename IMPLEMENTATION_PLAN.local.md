@@ -1,4 +1,4 @@
-# LatexV — Missing Features & Implementation Plan
+# Particl — Missing Features & Implementation Plan
 
 > Local planning document — gitignored, not for commit.
 > Baseline: feature comparison against the "Feynman" demo video (Dec 2025 audit).
@@ -79,7 +79,7 @@ targeted rewrite. Today the edit box operates on the whole document only.
 
 ## P2 — Export as TeX
 
-Demo has "Export as PDF / Export as TeX" dropdown. LatexV has only Download PDF.
+Demo has "Export as PDF / Export as TeX" dropdown. Particl has only Download PDF.
 
 - Pure frontend: `new Blob([latexCode], {type: "application/x-tex"})` + anchor
   download as `document.tex`. Add a small export dropdown next to the existing
@@ -102,7 +102,7 @@ Original spec below for reference.
 ## P3 — Agent activity sidebar
 
 Demo shows a chat-style panel streaming the agent's steps ("17 of 20 messages
-remaining", tool calls, thinking). LatexV shows a one-line status banner.
+remaining", tool calls, thinking). Particl shows a one-line status banner.
 
 - The data already exists: the SSE stream emits `status` + `message` per event
   (`planning / generating / compiling / fixing / done / failed`).
