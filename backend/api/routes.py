@@ -1,0 +1,634 @@
+import asyncio
+import json
+import os
+import uuid
+from fastapi import APIRouter, HTTPException, Request, Depends, UploadFile, File
+from fastapi.concurrency import run_in_threadpool
+from fastapi.responses import FileResponse, StreamingResponse
+
+from auth.session import get_session
+from agents.generator import generate_document
+from agents.latex_agent import latex_agent, get_initial_state
+from db.models import Document, DocumentCreate, DocumentUpdate, ConversationCreate
+from db import queries as db_queries
+from db import versions as version_queries
+from models.compile_models import CompileRequest
+from models.generate_models import GenerateRequest, GenerateResponse
+from cache_redis import cache as redis_cache
+from cache_redis import rate_limiter as redis_rate
+from services.storage import upload_pdf
+from services import files as file_service
+from tasks.compile import compile_document_task
+from tools.compiler import LatexCompilationError, compile_latex
+import re
+
+router = APIRouter()
+
+
+def get_current_user(request: Request) -> str:
+    """Get current user ID from session cookie"""
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    user_id = get_session(session_id)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Session expired")
+
+    return user_id
+
+
+def _clean_latex(text: str) -> str:
+    """Clean LaTeX code of problematic commands"""
+    cleaned = re.sub(
+        r"^```(?:latex)?\s*|\s*```$", "", text.strip(), flags=re.MULTILINE
+    ).strip()
+
+    # Remove problematic commands
+    cleaned = re.sub(r"\\href\{[^}]+\}\{[^}]+\}", "[link]", cleaned)
+    cleaned = re.sub(r"\\url\{[^}]+\}", "[link]", cleaned)
+    cleaned = re.sub(r"\\textbullet", "*", cleaned)
+    cleaned = re.sub(r"\\justify\b", "", cleaned)
+    cleaned = re.sub(r"\\Justifying\b", "", cleaned)
+    cleaned = re.sub(r"\\centering\b", "", cleaned)
+    cleaned = re.sub(r"\\raggedright\b", "", cleaned)
+    cleaned = re.sub(r"\\raggedleft\b", "", cleaned)
+    cleaned = re.sub(r"\bJustifying\b", "", cleaned)
+
+    # Clean up formatting
+    cleaned = re.sub(r"\n\n\n+", "\n\n", cleaned)
+    cleaned = re.sub(r"[ \t]+\n", "\n", cleaned)
+
+    return cleaned.strip()
+
+
+def _get_client_id(request: Request) -> str:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+@router.get("/")
+def health_check():
+    return {"Status": "Running"}
+
+
+@router.post("/files", status_code=201)
+async def upload_data_file(request: Request, file: UploadFile = File(...)):
+    """Upload a data file (CSV) to use as context for document generation."""
+    user_id = get_current_user(request)
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    ext = os.path.splitext(file.filename or "")[1].lower()
+    if ext not in file_service.ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type '{ext}'. Allowed: "
+            + ", ".join(sorted(file_service.ALLOWED_EXTENSIONS)),
+        )
+
+    content = await file.read()
+    try:
+        summary = file_service.parse_csv(file.filename, content)
+    except file_service.FileValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    file_id = file_service.store_file_summary(user_id, summary)
+    return {
+        "file_id": file_id,
+        "filename": summary["filename"],
+        "row_count": summary["row_count"],
+        "columns": [c["name"] for c in summary["columns"]],
+    }
+
+
+@router.post("/generate", response_model=GenerateResponse)
+async def generate_request(request: Request, data: GenerateRequest):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    latex_output = generate_document(data.prompt)
+    return GenerateResponse(latex=latex_output)
+
+
+@router.post("/compile")
+async def compile_document(request: Request, data: CompileRequest):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    try:
+        pdf_path = compile_latex(data.latex)
+        pdf_url = upload_pdf(
+            local_path=pdf_path,
+            user_id=get_current_user(request),
+            doc_id=str(uuid.uuid4()),
+        )
+        return {"pdf_url": pdf_url, "success": True}
+    except LatexCompilationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.post("/v2/agent")
+async def agent_generate(request: Request, data: GenerateRequest):
+    client_id = _get_client_id(request)
+    if redis_rate.is_rate_limited(client_id):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    initial_state = get_initial_state(data.prompt)
+    result = await run_in_threadpool(latex_agent.invoke, initial_state)
+
+    if result["status"] == "done":
+        try:
+            doc_id = str(uuid.uuid4())
+            pdf_url = upload_pdf(
+                local_path=result["pdf_path"],
+                user_id=get_current_user(request),
+                doc_id=doc_id,
+            )
+            redis_cache.cache_latex_result(data.prompt, result["pdf_path"])
+            return {"pdf_url": pdf_url, "latex": result["latex"]}
+        except Exception as exc:
+            raise HTTPException(
+                status_code=500, detail=f"PDF upload failed: {str(exc)}"
+            )
+
+    raise HTTPException(
+        status_code=422,
+        detail={
+            "error": result["error"],
+            "last_latex": result["latex"],
+            "attempts": result["retries"],
+        },
+    )
+
+
+@router.post("/v2/agent/async")
+async def agent_async(request: Request, data: GenerateRequest):
+    """Submit document generation as background job. Returns job_id for polling."""
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    doc = db_queries.create_document(
+        DocumentCreate(
+            user_id=get_current_user(request),
+            prompt=data.prompt,
+            latex="",
+            status="processing",
+        )
+    )
+
+    task = compile_document_task.delay(
+        prompt=data.prompt,
+        document_id=doc["id"],
+        user_id=get_current_user(request),
+    )
+
+    return {
+        "job_id": task.id,
+        "document_id": doc["id"],
+        "status": "pending",
+    }
+
+
+@router.get("/status/{job_id}")
+async def get_job_status(request: Request, job_id: str):
+    """Poll for job status and result."""
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    from tasks.celery_app import celery_app
+
+    result = celery_app.AsyncResult(job_id)
+
+    response = {
+        "job_id": job_id,
+        "status": result.state.lower() if result.state else "unknown",
+    }
+
+    if result.state == "SUCCESS":
+        response.update(result.result)
+    elif result.state == "FAILURE":
+        response["error"] = str(result.info)
+    elif result.state == "PROGRESS":
+        response["meta"] = result.info
+
+    return response
+
+
+@router.post("/documents", response_model=Document)
+async def create_document(request: Request, data: DocumentCreate):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    data.user_id = get_current_user(request)
+    return db_queries.create_document(data)
+
+
+@router.get("/documents/{doc_id}", response_model=Document)
+async def get_document(request: Request, doc_id: str):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    doc = db_queries.get_document(doc_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if doc.get("user_id") != get_current_user(request):
+        raise HTTPException(status_code=403, detail="Access denied")
+    return doc
+
+
+@router.get("/documents", response_model=list[Document])
+async def list_documents(request: Request):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    return db_queries.list_user_documents(get_current_user(request))
+
+
+@router.put("/documents/{doc_id}", response_model=Document)
+async def update_document(request: Request, doc_id: str, data: DocumentUpdate):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    doc = db_queries.get_document(doc_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if doc.get("user_id") != get_current_user(request):
+        raise HTTPException(status_code=403, detail="Access denied")
+    return db_queries.update_document(doc_id, data)
+
+
+@router.delete("/documents/{doc_id}")
+async def delete_document(request: Request, doc_id: str):
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    doc = db_queries.get_document(doc_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if doc.get("user_id") != get_current_user(request):
+        raise HTTPException(status_code=403, detail="Access denied")
+    success = db_queries.delete_document(doc_id)
+    return {"deleted": True}
+
+
+@router.get("/documents/{doc_id}/versions")
+async def get_document_versions(request: Request, doc_id: str):
+    """Get all versions of a document."""
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    doc = db_queries.get_document(doc_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if doc.get("user_id") != get_current_user(request):
+        raise HTTPException(status_code=403, detail="Access denied")
+    return version_queries.get_versions(doc_id)
+
+
+@router.get("/documents/{doc_id}/versions/{version_id}")
+async def get_version(request: Request, doc_id: str, version_id: str):
+    """Get a specific version of a document."""
+    if redis_rate.is_rate_limited(_get_client_id(request)):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    doc = db_queries.get_document(doc_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if doc.get("user_id") != get_current_user(request):
+        raise HTTPException(status_code=403, detail="Access denied")
+    version = version_queries.get_version(version_id)
+    if not version or version["document_id"] != doc_id:
+        raise HTTPException(status_code=404, detail="Version not found")
+    return version
+
+
+async def agent_stream(
+    prompt: str,
+    user_id: str,
+    conversation_history: list = [],
+    conversation_id: str = None,
+    file_ids: list = None,
+):
+    doc_id = str(uuid.uuid4())
+    from graph.nodes import _llm, _GENERATE_SYSTEM, _FIX_SYSTEM, _clean
+    from langchain_core.messages import HumanMessage, SystemMessage
+    from tools.latex_tools import compile_latex_tool
+
+    initial_state = get_initial_state(prompt)
+    latex = ""
+    retries = 0
+    max_retries = 3
+    conv_id = conversation_id
+    pdf_url = None
+
+    try:
+        if conv_id:
+            conv = db_queries.get_conversation(conv_id)
+            if not conv or conv["user_id"] != user_id:
+                conv_id = None
+
+        if not conv_id:
+            title_messages = [
+                SystemMessage(
+                    content="You are a title generator. Generate a short, descriptive title (2-4 words max) for this document request. Reply with ONLY the title, no explanation. Example: 'Software Engineer Resume' or 'Research Paper Abstract'"
+                ),
+                HumanMessage(content=prompt),
+            ]
+
+            try:
+                title_response = _llm.invoke(title_messages)
+                title = str(title_response.content).strip()
+                if len(title) > 40:
+                    title = title[:37] + "..."
+            except:
+                words = prompt.strip().split()[:4]
+                title = " ".join(words)
+                if len(prompt.split()) > 4:
+                    title += "..."
+
+            conv_data = ConversationCreate(
+                user_id=user_id, prompt=prompt, title=title, status="in_progress"
+            )
+            conv = db_queries.create_conversation(conv_data)
+            conv_id = conv["id"]
+        else:
+            db_queries.update_conversation(conv_id, {"status": "in_progress"})
+
+        state = {
+            **initial_state,
+            "latex": "",
+            "status": "planning",
+            "error": "",
+            "pdf_path": "",
+            "retries": 0,
+            "conversation_id": conv_id,
+            "message": "Analyzing request and planning document structure...",
+        }
+        yield f"data: {json.dumps(state)}\n\n"
+
+        # Build messages with conversation history
+        messages = [SystemMessage(content=_GENERATE_SYSTEM)]
+
+        # Add conversation history
+        if conversation_history:
+            history_context = "\n\nPrevious conversation:\n"
+            for msg in conversation_history[-5:]:  # Last 5 messages for context
+                role = "User" if msg.role == "user" else "Assistant"
+                history_context += f"\n{role}: {msg.content[:200]}"
+
+            prompt_with_context = f"{history_context}\n\nNew request: {prompt}"
+        else:
+            prompt_with_context = f"Create a LaTeX document for: {prompt}"
+
+        if file_ids:
+            data_context = file_service.build_data_context(user_id, file_ids)
+            prompt_with_context += data_context
+
+        messages.append(HumanMessage(content=prompt_with_context))
+
+        async for chunk in _llm.astream(messages):
+            if hasattr(chunk, "content") and chunk.content:
+                content_val = chunk.content
+                chunk_text = ""
+                if isinstance(content_val, list):
+                    for item in content_val:
+                        if isinstance(item, str):
+                            chunk_text += item
+                        elif isinstance(item, dict) and "text" in item:
+                            chunk_text += str(item["text"])
+                        else:
+                            chunk_text += str(item)
+                else:
+                    chunk_text = str(content_val)
+
+                latex = latex + chunk_text
+                state = {
+                    **initial_state,
+                    "latex": latex,
+                    "status": "generating",
+                    "error": "",
+                    "pdf_path": "",
+                    "retries": retries,
+                    "conversation_id": conv_id,
+                    "message": "Generating LaTeX code...",
+                }
+                yield f"data: {json.dumps(state)}\n\n"
+
+        final_latex = _clean(latex)
+
+        # Compile with self-correction loop
+        while retries <= max_retries:
+            state = {
+                **initial_state,
+                "latex": final_latex,
+                "status": "compiling",
+                "error": "",
+                "pdf_path": "",
+                "retries": retries,
+                "conversation_id": conv_id,
+                "message": f"Compiling PDF (attempt {retries + 1}/{max_retries + 1})..."
+                if retries > 0
+                else "Compiling PDF...",
+            }
+            yield f"data: {json.dumps(state)}\n\n"
+
+            result = await run_in_threadpool(
+                compile_latex_tool.invoke, {"latex": final_latex}
+            )
+
+            if result["success"]:
+                pdf_path = result["pdf_path"]
+                try:
+                    pdf_url = upload_pdf(
+                        local_path=pdf_path,
+                        user_id=user_id,
+                        doc_id=doc_id,
+                    )
+                    final_state = {
+                        **state,
+                        "pdf_path": pdf_path,
+                        "pdf_url": pdf_url,
+                        "status": "done",
+                        "message": "Document compiled successfully!",
+                    }
+                except Exception as e:
+                    pdf_url = None
+                    final_state = {
+                        **state,
+                        "pdf_path": pdf_path,
+                        "upload_error": str(e),
+                        "status": "done",
+                        "message": "Document compiled (upload warning)",
+                    }
+                if conv_id:
+                    update_data = {
+                        "latex": final_latex,
+                        "status": "completed",
+                    }
+                    if pdf_url:
+                        update_data["pdf_url"] = pdf_url
+                    db_queries.update_conversation(conv_id, update_data)
+                yield f"data: {json.dumps(final_state)}\n\n"
+                return
+
+            # Compilation failed - auto-fix
+            error_msg = result.get("error", "Unknown error")
+            retries += 1
+
+            if retries > max_retries:
+                error_state = {
+                    **state,
+                    "error": f"Failed after {max_retries} attempts. Last error: {error_msg}",
+                    "status": "failed",
+                    "message": f"Failed after {max_retries} auto-correction attempts",
+                }
+                if conv_id:
+                    db_queries.update_conversation(
+                        conv_id,
+                        {"latex": final_latex, "status": "failed", "pdf_url": None},
+                    )
+                yield f"data: {json.dumps(error_state)}\n\n"
+                return
+
+            # Fix the LaTeX
+            state["status"] = "fixing"
+            state["message"] = f"Self-correcting (attempt {retries}/{max_retries})..."
+            yield f"data: {json.dumps(state)}\n\n"
+
+            fix_messages = [
+                SystemMessage(content=_FIX_SYSTEM),
+                HumanMessage(content=f"LaTeX:\n{final_latex}\n\nError:\n{error_msg}"),
+            ]
+
+            fixed_latex = ""
+            async for chunk in _llm.astream(fix_messages):
+                if hasattr(chunk, "content") and chunk.content:
+                    content_val = chunk.content
+                    chunk_text = ""
+                    if isinstance(content_val, list):
+                        for item in content_val:
+                            if isinstance(item, str):
+                                chunk_text += item
+                            elif isinstance(item, dict) and "text" in item:
+                                chunk_text += str(item["text"])
+                            else:
+                                chunk_text += str(item)
+                    else:
+                        chunk_text = str(content_val)
+
+                    fixed_latex += chunk_text
+                    state = {
+                        **state,
+                        "latex": fixed_latex,
+                        "retries": retries,
+                        "message": f"Fixing error and regenerating (attempt {retries}/{max_retries})...",
+                    }
+                    yield f"data: {json.dumps(state)}\n\n"
+
+            # Adopt the fix for the next compile attempt. Guard against a
+            # truncated fixer response (no \end{document}) - compiling that
+            # would fail regardless, so keep the previous code instead.
+            cleaned_fix = _clean(fixed_latex)
+            if "\\end{document}" in cleaned_fix:
+                final_latex = cleaned_fix
+            else:
+                print(
+                    "[WARN] Fixer output truncated (missing \\end{document}); "
+                    "keeping previous LaTeX for next attempt"
+                )
+
+    except Exception as e:
+        error_state = {
+            **initial_state,
+            "error": str(e),
+            "status": "failed",
+            "message": "Generation failed",
+        }
+        yield f"data: {json.dumps(error_state)}\n\n"
+
+
+@router.post("/v2/agent/stream")
+async def agent_stream_endpoint(request: Request, data: GenerateRequest):
+    client_id = _get_client_id(request)
+    if redis_rate.is_rate_limited(client_id):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    return StreamingResponse(
+        agent_stream(
+            data.prompt,
+            user_id=get_current_user(request),
+            conversation_history=data.conversation_history or [],
+            conversation_id=data.conversation_id,
+            file_ids=data.file_ids or [],
+        ),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+        },
+    )
+
+
+@router.get("/conversations")
+async def list_conversations(request: Request):
+    return db_queries.list_user_conversations(get_current_user(request))
+
+
+@router.get("/conversations/{conv_id}")
+async def get_conversation(conv_id: str, request: Request):
+    conv = db_queries.get_conversation(conv_id)
+    if not conv or conv["user_id"] != get_current_user(request):
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return conv
+
+
+@router.delete("/conversations/{conv_id}")
+async def delete_conversation(conv_id: str, request: Request):
+    conv = db_queries.get_conversation(conv_id)
+    if not conv or conv["user_id"] != get_current_user(request):
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    db_queries.delete_conversation(conv_id)
+    return {"message": "Conversation deleted"}
+
+
+@router.patch("/conversations/{conv_id}")
+async def touch_conversation(conv_id: str, request: Request):
+    """Update conversation (e.g., to move to top by updating timestamp)"""
+    conv = db_queries.get_conversation(conv_id)
+    if not conv or conv["user_id"] != get_current_user(request):
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    db_queries.update_conversation(conv_id, {"updated_at": "now()"})
+    return {"message": "Conversation updated"}
+
+
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+
+
+class ContactRequest(BaseModel):
+    name: str
+    email: EmailStr
+    subject: str
+    message: str
+
+
+@router.post("/contact")
+async def contact_form(data: ContactRequest):
+    contact_email = "quantumbyte.co.in@gmail.com"
+
+    subject = f"[Particl Contact] {data.subject}"
+    body = f"""
+New contact form submission from Particl website:
+
+Name: {data.name}
+Email: {data.email}
+Subject: {data.subject}
+
+Message:
+{data.message}
+
+---
+This message was sent via the Particl contact form.
+    """
+
+    print(f"[CONTACT FORM] New submission from {data.name} ({data.email})")
+    print(f"Subject: {data.subject}")
+    print(f"Message: {data.message[:100]}...")
+
+    return {
+        "message": "Thank you for your message. We'll get back to you within 24 hours.",
+        "recipient": contact_email,
+    }
