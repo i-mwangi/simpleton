@@ -359,6 +359,10 @@ _SECOND_PASS_MARKERS = (
     "\\bibliography",
     "\\printindex",
     "\\printbibliography",
+    # TikZ overlay annotations (tikzmark, remember picture) record node
+    # positions in the .aux on pass 1 and can only draw them on pass 2.
+    "remember picture",
+    "\\tikzmark",
 )
 
 
@@ -460,13 +464,18 @@ def _apply_latex_fixes(latex_code: str, error_details: str) -> str:
     return fixed_code
 
 
-def compile_latex(latex_code: str, max_engines: int = None) -> str:
+def compile_latex(
+    latex_code: str, max_engines: int = None, image_paths: List[Tuple[str, str]] = None
+) -> str:
     """
     Compile LaTeX code with comprehensive robustness features.
 
     Args:
         latex_code: The LaTeX source code
         max_engines: Maximum number of engines to try (None = all)
+        image_paths: Optional (latex_filename, disk_path) pairs of uploaded
+            images; each is copied into the compile directory so
+            \\includegraphics{latex_filename} resolves
 
     Returns:
         Path to compiled PDF
@@ -491,6 +500,14 @@ def compile_latex(latex_code: str, max_engines: int = None) -> str:
 
     try:
         temp_dir = tempfile.mkdtemp(prefix="latex_compile_")
+
+        # Make uploaded images available to \includegraphics
+        for latex_name, disk_path in image_paths or []:
+            try:
+                if os.path.isfile(disk_path):
+                    shutil.copy2(disk_path, os.path.join(temp_dir, os.path.basename(latex_name)))
+            except Exception as copy_exc:
+                print(f"[WARN] Could not stage image {latex_name}: {copy_exc}")
 
         for engine_idx, engine in enumerate(engines_to_try):
             current_code = latex_code
