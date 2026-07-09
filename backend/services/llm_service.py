@@ -1,14 +1,21 @@
-import os 
-import google.generativeai as genai
+import os
+
 from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-2.5-flash")
+# Qwen via Alibaba Cloud Model Studio's OpenAI-compatible endpoint.
+client = OpenAI(
+    api_key=os.getenv("QWEN_API_KEY") or os.getenv("DASHSCOPE_API_KEY") or "not-set",
+    base_url=os.getenv(
+        "QWEN_BASE_URL", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+    ),
+)
+MODEL = os.getenv("QWEN_MODEL", "qwen3.7-plus")
 
-def generate_latex(prompt : str) -> str:
+
+def generate_latex(prompt: str) -> str:
     system_prompt = f"""
         You are a LaTeX generator.
 
@@ -24,5 +31,8 @@ def generate_latex(prompt : str) -> str:
     {prompt}
     """
 
-    response = model.generate_content(system_prompt)
-    return response.text
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=[{"role": "user", "content": system_prompt}],
+    )
+    return response.choices[0].message.content
