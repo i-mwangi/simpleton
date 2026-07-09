@@ -636,7 +636,7 @@ export default function EditorPage() {
     setAgentMessage("Compiling...");
 
     try {
-      const result = await api.agent.compile(latexCode);
+      const result = await api.agent.compile(latexCode, attachedFiles.map((f) => f.file_id));
 
       if (result?.pdf_url) {
         setPdfUrl(result.pdf_url);
@@ -691,7 +691,7 @@ export default function EditorPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".csv"
+          accept=".csv,.png,.jpg,.jpeg"
           multiple
           style={{ display: "none" }}
           onChange={(e) => {
