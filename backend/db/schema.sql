@@ -11,8 +11,12 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL DEFAULT 'user',
+  onboarding JSONB,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Existing databases: add the onboarding column if it is missing
+ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarding JSONB;
 
 -- Documents
 CREATE TABLE IF NOT EXISTS documents (
