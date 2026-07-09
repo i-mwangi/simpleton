@@ -61,6 +61,18 @@ export const api = {
       if (!res.ok) return null;
       return res.json();
     },
+    saveOnboarding: async (data: {
+      use_case: string;
+      use_case_detail?: string;
+      source: string;
+      source_detail?: string;
+    }) => {
+      const res = await fetchWithCookies("/auth/onboarding", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      return res.json();
+    },
   },
 
   documents: {
