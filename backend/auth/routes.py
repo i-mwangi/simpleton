@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request, Response, status
 
-from auth.models import UserCreate, UserLogin, UserResponse
+from auth.models import OnboardingData, UserCreate, UserLogin, UserResponse
 from auth import session as session_manager
 from auth import utils as auth_utils
 from db import users as user_queries
@@ -88,5 +88,22 @@ async def me(request: Request):
         id=user["id"],
         email=user["email"],
         role=user["role"],
+        onboarding=user.get("onboarding"),
         created_at=user.get("created_at"),
     )
+
+
+@router.post("/onboarding")
+async def save_onboarding(data: OnboardingData, request: Request):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    user_id = session_manager.get_session(session_id)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Session expired")
+
+    updated = user_queries.set_user_onboarding(user_id, data.model_dump())
+    if not updated:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "Onboarding saved"}
