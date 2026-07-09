@@ -195,10 +195,10 @@ export const api = {
       return res.json();
     },
 
-    compile: async (latex: string) => {
+    compile: async (latex: string, fileIds: string[] = []) => {
       const res = await fetchWithCookies("/compile", {
         method: "POST",
-        body: JSON.stringify({ latex }),
+        body: JSON.stringify({ latex, file_ids: fileIds }),
       });
       return res.json();
     },
@@ -208,8 +208,9 @@ export const api = {
 export interface UploadedFile {
   file_id: string;
   filename: string;
-  row_count: number;
-  columns: string[];
+  kind?: "csv" | "image";
+  row_count?: number;
+  columns?: string[];
 }
 
 export interface AgentEvent {
