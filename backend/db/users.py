@@ -27,3 +27,14 @@ def get_user_by_id(user_id: str) -> Optional[dict]:
     supabase: Client = get_supabase()
     result = supabase.table(TABLE_NAME).select("*").eq("id", user_id).execute()
     return result.data[0] if result.data else None
+
+
+def set_user_onboarding(user_id: str, onboarding: dict) -> Optional[dict]:
+    supabase: Client = get_supabase()
+    result = (
+        supabase.table(TABLE_NAME)
+        .update({"onboarding": onboarding})
+        .eq("id", user_id)
+        .execute()
+    )
+    return result.data[0] if result.data else None
