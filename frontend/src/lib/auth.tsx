@@ -7,6 +7,7 @@ interface User {
   id: string;
   email: string;
   role: string;
+  onboarding?: Record<string, string> | null;
 }
 
 interface AuthContextType {
