@@ -152,7 +152,7 @@ export default function HowItWorks() {
                 <span className="mono" style={{ display: "block", fontSize: "12.5px", color: on ? e.accent : "var(--text-muted)", marginBottom: "6px", transition: "color 0.4s ease" }}>
                   {e.sub}
                 </span>
-                <span style={{ fontSize: "17px", fontWeight: 600, color: "var(--text-primary)" }}>{e.label}</span>
+                <span className="px-font" style={{ fontSize: "18px", fontWeight: 700, color: "var(--text-primary)" }}>{e.label}</span>
               </button>
             );
           })}
