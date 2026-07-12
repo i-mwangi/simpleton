@@ -134,7 +134,9 @@ export default function HowItWorks() {
             src={ex.img}
             alt={`Compiled PDF page: ${ex.label}`}
             style={{
-              width: "95%",
+              maxWidth: "95%",
+              maxHeight: "475px",
+              width: "auto",
               height: "auto",
               display: "block",
               background: "#fff",
