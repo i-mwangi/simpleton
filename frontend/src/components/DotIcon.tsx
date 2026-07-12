@@ -68,6 +68,30 @@ const SHAPES: Record<string, [number, number][]> = {
     [21, 9], [21, 13], [21, 16.8],
     [17.5, 16], [14, 17],
   ],
+  // Sparkle (what if LaTeX wrote itself)
+  sparkle: [
+    [12, 3], [13.4, 8.6], [19, 10], [13.4, 11.4], [12, 17], [10.6, 11.4], [5, 10], [10.6, 8.6],
+    [18, 15], [20.5, 17.5], [18, 20], [15.5, 17.5],
+  ],
+  // Pencil (describe it)
+  pencil: [
+    [3.4, 20.6], [5.5, 18.5], [7.5, 16.5], [9.5, 14.5], [11.5, 12.5],
+    [13.5, 10.5], [15.5, 8.5], [17.5, 6.5], [19.3, 4.7], [17, 4], [19.9, 7],
+    [14, 20.5], [17, 20.5], [20, 20.5],
+  ],
+  // Rising bar chart (data becomes documents)
+  chart: [
+    [5, 20.5], [5, 17.5], [5, 14.5],
+    [12, 20.5], [12, 17], [12, 13.5], [12, 10],
+    [19, 20.5], [19, 16.5], [19, 12.5], [19, 8.5], [19, 4.5],
+  ],
+  // Chat bubble (refine by conversation)
+  chat: [
+    [4, 4.5], [8, 3], [12, 3], [16, 3], [20, 4.5],
+    [21, 8], [21, 12], [20, 15.5],
+    [16, 17], [12, 17], [8, 17],
+    [5, 18.5], [3.5, 20.5], [3, 16], [3, 11], [3, 7],
+  ],
   // Briefcase (professionals)
   briefcase: [
     [2.5, 9], [2.5, 13.5], [2.5, 18], [6, 20.5], [10, 20.5], [14, 20.5], [18, 20.5],
@@ -78,22 +102,39 @@ const SHAPES: Record<string, [number, number][]> = {
   ],
 };
 
-export default function DotIcon({ shape, size = 46 }: { shape: keyof typeof SHAPES; size?: number }) {
+export default function DotIcon({
+  shape,
+  size = 46,
+  bare = false,
+}: {
+  shape: keyof typeof SHAPES;
+  size?: number;
+  /** Render just the dotted svg (no chip) - for existing badges like the story timeline. */
+  bare?: boolean;
+}) {
   const dots = SHAPES[shape] ?? SHAPES.bolt;
+  const svg = (
+    <svg
+      width={bare ? size : Math.round(size * 0.6)}
+      height={bare ? size : Math.round(size * 0.6)}
+      viewBox="0 0 24 24"
+    >
+      {dots.map(([cx, cy], i) => (
+        <circle
+          key={i}
+          cx={cx}
+          cy={cy}
+          r="1.15"
+          fill={PALETTE[i % PALETTE.length]}
+          style={{ animationDelay: `${(i * 90) % 720}ms` }}
+        />
+      ))}
+    </svg>
+  );
+  if (bare) return svg;
   return (
     <div className="dot-tick-chip" style={{ width: `${size}px`, height: `${size}px` }}>
-      <svg width={Math.round(size * 0.6)} height={Math.round(size * 0.6)} viewBox="0 0 24 24">
-        {dots.map(([cx, cy], i) => (
-          <circle
-            key={i}
-            cx={cx}
-            cy={cy}
-            r="1.15"
-            fill={PALETTE[i % PALETTE.length]}
-            style={{ animationDelay: `${(i * 90) % 720}ms` }}
-          />
-        ))}
-      </svg>
+      {svg}
     </div>
   );
 }
