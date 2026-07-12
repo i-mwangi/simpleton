@@ -15,7 +15,7 @@ const TYPES: { t: string; d: string; img?: string; i?: React.ReactNode }[] = [
   { t: "Books", d: "Large works organized into chapters, formatted automatically", img: "/doc-books.png" },
   { t: "Curriculum Vitae", d: "Your experience as a polished one-page resume", img: "/doc-cv.png" },
   { t: "Letters", d: "Formal correspondence, opening to closing, in a minute", img: "/doc-letters.png" },
-  { t: "Invoices", d: "Line items and totals from machine-readable data", i: <><path d="M14 2H6a2 2 0 0 0-2 2v16l3-2 3 2 3-2 3 2 3-2V8z" /><path d="M9 9h6M9 13h6" /></> },
+  { t: "Invoices", d: "Line items and totals from machine-readable data", img: "/doc-invoices.png" },
   { t: "Proposals", d: "Structured proposals with budgets and timelines", img: "/doc-proposals.png" },
 ];
 
