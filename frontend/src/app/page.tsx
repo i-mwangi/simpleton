@@ -7,6 +7,9 @@ import { useAuth } from "@/lib/auth";
 import StorySection from "@/components/StorySection";
 import HowItWorks from "@/components/HowItWorks";
 import DocTypeCarousel from "@/components/DocTypeCarousel";
+import DotIcon from "@/components/DotIcon";
+
+const featureShapes = ["layers", "bolt", "wrench", "data", "clock", "download"] as const;
 
 const PixelBlast = dynamic(() => import("@/components/PixelBlast"), { ssr: false });
 
@@ -241,8 +244,8 @@ export default function Home() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "22px" }}>
             {features.map((f, i) => (
               <div key={i} className="soft-card" style={{ padding: "26px" }}>
-                <div style={{ width: "46px", height: "46px", borderRadius: "12px", background: "var(--accent-dim)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "18px", color: "var(--accent)" }}>
-                  {f.icon}
+                <div style={{ marginBottom: "18px" }}>
+                  <DotIcon shape={featureShapes[i]} size={46} />
                 </div>
                 <h3 style={{ fontSize: "17px", fontWeight: 600, color: "var(--text-primary)", marginBottom: "9px" }}>{f.title}</h3>
                 <p style={{ fontSize: "14px", lineHeight: 1.65, color: "var(--text-secondary)" }}>{f.description}</p>
@@ -333,8 +336,8 @@ export default function Home() {
               },
             ].map((g) => (
               <div key={g.title} className="soft-card" style={{ padding: "26px", textAlign: "center" }}>
-                <div style={{ width: "48px", height: "48px", borderRadius: "12px", background: "var(--accent-dim)", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-                  {g.icon}
+                <div style={{ display: "flex", justifyContent: "center", margin: "0 0 16px" }}>
+                  <DotIcon shape={({ Researchers: "gradcap", Students: "book", Professionals: "briefcase" } as const)[g.title as "Researchers" | "Students" | "Professionals"]} size={48} />
                 </div>
                 <h3 style={{ fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>{g.title}</h3>
                 <p style={{ fontSize: "14px", lineHeight: 1.6, color: "var(--text-secondary)" }}>{g.body}</p>
