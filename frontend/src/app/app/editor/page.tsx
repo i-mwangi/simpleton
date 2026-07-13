@@ -773,11 +773,11 @@ export default function EditorPage() {
             }}
           >
             <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "24px", height: "24px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
-            <span style={{ fontSize: "15px", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "0.02em" }}>
+            <span className="brand-word" style={{ fontSize: "15px", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "0.02em" }}>
               Particl
             </span>
           </button>
-          <span style={{
+          <span className="project-name" style={{
             fontSize: "13px",
             fontWeight: 600,
             color: "var(--text-primary)",

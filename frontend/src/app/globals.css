@@ -488,21 +488,38 @@ code, pre, .mono {
 
 /* Editor Mobile Styles */
 @media (max-width: 768px) {
-  /* Toolbar: the 3-column grid overflows 375px. Let the button groups wrap
-     onto multiple centered rows instead of overlapping the editor. */
+  /* Toolbar: the 3-column grid overflows 375px and each group has its own
+     translucent "card", so wrapping leaves floating cards over the editor.
+     Flatten the group cards and let every control flow in one wrapping bar. */
   .editor-toolbar {
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    gap: 8px !important;
+    align-items: center !important;
+    row-gap: 6px !important;
+    column-gap: 4px !important;
+    padding: 8px 10px !important;
   }
   .editor-toolbar > div {
     justify-self: auto !important;
-    flex-wrap: wrap;
+    flex-wrap: nowrap !important;   /* keep each group on one horizontal line */
+    border: none !important;
+    background: transparent !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    gap: 2px !important;
   }
+  /* Redundant next to the logo icon; drop it to save width. */
+  .editor-toolbar .brand-word { display: none !important; }
   /* Keep Compile in the toolbar - the old fixed FAB left an empty card behind. */
   .compile-button {
     position: static !important;
+    padding: 7px 16px !important;
+  }
+  /* Trim the project-name label so it doesn't push the row wider. */
+  .editor-toolbar .project-name {
+    max-width: 70px !important;
   }
 
   /* Prompt input */
