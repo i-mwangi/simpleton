@@ -540,10 +540,10 @@ code, pre, .mono {
     position: static !important;
     padding: 7px 16px !important;
   }
-  /* Trim the project-name label so it doesn't push the row wider. */
-  .editor-toolbar .project-name {
-    max-width: 70px !important;
-  }
+  /* Drop the project name and the profile email text so the three groups
+     fit on ONE row (the avatar icon alone identifies the account). */
+  .editor-toolbar .project-name { display: none !important; }
+  .editor-toolbar span[style*="130px"] { display: none !important; }
 
   /* Prompt input */
   textarea[placeholder*="Describe"] {
