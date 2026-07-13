@@ -488,36 +488,28 @@ code, pre, .mono {
 
 /* Editor Mobile Styles */
 @media (max-width: 768px) {
-  /* Stack split pane vertically */
-  [style*="flexDirection: row"] {
-    flex-direction: column !important;
+  /* Toolbar: the 3-column grid overflows 375px. Let the button groups wrap
+     onto multiple centered rows instead of overlapping the editor. */
+  .editor-toolbar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
   }
-  
-  /* Editor takes full height on mobile */
-  div[style*="height: calc(100vh"] {
-    height: auto !important;
-    min-height: calc(100vh - 65px);
+  .editor-toolbar > div {
+    justify-self: auto !important;
+    flex-wrap: wrap;
   }
-  
-  /* Each pane takes 50% on mobile */
-  .editor-pane,
-  .preview-pane {
-    min-height: 40vh !important;
-  }
-  
-  /* Compile button positioning */
+  /* Keep Compile in the toolbar - the old fixed FAB left an empty card behind. */
   .compile-button {
-    position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
-    z-index: 50 !important;
+    position: static !important;
   }
-  
+
   /* Prompt input */
   textarea[placeholder*="Describe"] {
     min-height: 60px !important;
   }
-  
+
   /* Sidebar full screen on mobile */
   [style*="width: 300px"] {
     width: 100vw !important;
