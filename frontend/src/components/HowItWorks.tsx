@@ -58,7 +58,7 @@ const ARROW_DOTS: [number, number][] = [
 function ArrowTrack({ color, active }: { color: string; active: number }) {
   const top = `calc(((100% - 36px) / 3) * ${active} + ${active * 18}px + (100% - 36px) / 6)`;
   return (
-    <div style={{ position: "relative", alignSelf: "stretch" }}>
+    <div className="hiw-arrow" style={{ position: "relative", alignSelf: "stretch" }}>
       <svg
         className="dot-arrow"
         width="74"

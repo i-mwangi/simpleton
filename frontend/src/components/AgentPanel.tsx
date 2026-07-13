@@ -213,6 +213,7 @@ export default function AgentPanel({
   return (
     <div
       ref={panelRef}
+      className="agent-panel"
       style={{
         position: "fixed",
         ...(pos

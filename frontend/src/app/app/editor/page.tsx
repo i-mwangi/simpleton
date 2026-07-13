@@ -1114,7 +1114,7 @@ export default function EditorPage() {
           </div>
         </div>
 
-        <div ref={splitRef} style={{
+        <div ref={splitRef} className="editor-split" style={{
           display: "flex",
           flex: 1,
           minHeight: 0,
