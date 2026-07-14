@@ -114,23 +114,8 @@ export default function Home() {
 
   return (
     <div className="theme-paper" style={{ minHeight: "100vh" }}>
-      {/* ── Nav pill ── */}
-      <nav style={{ position: "fixed", top: "18px", left: "50%", transform: "translateX(-50%)", zIndex: 100, width: "min(1040px, calc(100% - 32px))" }}>
-        <div className="nav-pill">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Logo size={24} />
-            <span className="px-font" style={{ fontSize: "16px", fontWeight: 700, color: "var(--text-primary)" }}>Particl</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "22px" }}>
-            <Link href="/login" className="pill-btn pill-btn-primary">
-              Sign in&nbsp;&rsaquo;
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* ── Hero ── */}
-      <section style={{ position: "relative", paddingTop: "168px", paddingBottom: "72px", textAlign: "center", overflow: "hidden" }}>
+      <section style={{ position: "relative", paddingTop: "72px", paddingBottom: "72px", textAlign: "center", overflow: "hidden" }}>
         {/* animated pixel field backdrop */}
         <div
           aria-hidden
@@ -158,18 +143,19 @@ export default function Home() {
           />
         </div>
         <div style={{ position: "relative", maxWidth: "760px", margin: "0 auto", padding: "0 24px" }}>
-          <p style={{ fontSize: "13px", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--accent-deep)", marginBottom: "22px" }}>
-            AI-powered LaTeX, done for you
-          </p>
-          <h1 style={{ fontSize: "clamp(38px, 6vw, 62px)", fontWeight: 700, lineHeight: 1.08, color: "var(--text-primary)", marginBottom: "22px" }}>
-            Describe a document.
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", marginBottom: "40px" }}>
+            <Logo size={38} />
+            <span className="px-font" style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "0.01em" }}>Particl</span>
+          </div>
+          <h1 style={{ fontSize: "clamp(40px, 6.4vw, 66px)", fontWeight: 700, lineHeight: 1.06, color: "var(--text-primary)", marginBottom: "24px" }}>
+            Academic writing,
             <br />
-            <span style={{ color: "var(--accent)" }}>Watch it appear.</span>
+            <span style={{ color: "var(--accent)", fontStyle: "italic" }}>refined.</span>
           </h1>
-          <p style={{ fontSize: "17px", lineHeight: 1.7, color: "var(--text-secondary)", maxWidth: "540px", margin: "0 auto 40px" }}>
-            Tell the agent what you need in plain English or drop in your data.
-            <br />
-            It writes, compiles, and fixes the LaTeX — you get a finished PDF.
+          <p style={{ fontSize: "17px", lineHeight: 1.7, color: "var(--text-secondary)", maxWidth: "560px", margin: "0 auto 40px" }}>
+            An intelligent LaTeX writing companion that understands your research —
+            streamlining structure, getting the mathematics right, reading your
+            reference papers, and offering contextual suggestions to elevate your drafts.
           </p>
           <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/register" className="pill-btn pill-btn-primary" style={{ padding: "13px 30px", fontSize: "14px" }}>
