@@ -11,7 +11,6 @@ const TYPES: { t: string; d: string; img?: string; i?: React.ReactNode }[] = [
   { t: "Presentations", d: "Beamer slide decks — one idea per frame", img: "/doc-presentations.png" },
   { t: "Papers", d: "Abstract to bibliography in journal-ready form", img: "/doc-papers.png" },
   { t: "Lecture notes", d: "Complex equations and worked examples, typeset with ease", img: "/doc-lecture-notes.png" },
-  { t: "Transactional documents", d: "Automate document creation through the API", img: "/doc-transactional.png" },
   { t: "Books", d: "Large works organized into chapters, formatted automatically", img: "/doc-books.png" },
   { t: "Curriculum Vitae", d: "Your experience as a polished one-page resume", img: "/doc-cv.png" },
   { t: "Letters", d: "Formal correspondence, opening to closing, in a minute", img: "/doc-letters.png" },

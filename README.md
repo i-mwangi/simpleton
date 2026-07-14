@@ -24,6 +24,8 @@ Describe the document you want in plain English — Particl's agent writes the L
 
 Particl removes LaTeX as a barrier. No syntax, no missing packages, no cryptic compile errors — just describe the document you need, or drop in a dataset, and watch it write itself.
 
+**For researchers, it's more than a formatter.** Particl is an intelligent LaTeX writing companion that understands academic research: it streamlines document structure, generates accurate mathematical syntax, reads reference papers you attach so your work is grounded in real sources, and offers contextual suggestions to elevate the quality of your academic drafts.
+
 **How a document happens:**
 
 1. **Describe it in plain English** — a resume, a lab report, a thesis, a slide deck.
@@ -42,6 +44,8 @@ Particl removes LaTeX as a barrier. No syntax, no missing packages, no cryptic c
 | **Self-correcting compilation** | The agent reads pdflatex errors and repairs its own code, up to 3 retries |
 | **Two-pass compilation** | Tables of contents, cross-references, and citations resolve correctly |
 | **CSV data grounding** | Uploaded data is summarized and injected into generation — tables and pgfplots charts come from real rows |
+| **Reference-paper ingestion** | Attach a PDF; its text is extracted and fed as context so the draft draws on real research and cites it |
+| **Draft review agent** | One click critiques the draft (and any attached papers) with severity-ranked suggestions on structure, citations, math, clarity and rigor — apply any of them with the agent |
 | **Document-type awareness** | Papers get depth and structure; CVs stay on one page; presentations use beamer; theses get real chapters |
 | **Split-pane editor** | Monaco-based LaTeX editor beside a live PDF preview, with a draggable divider |
 | **Focus mode** | Hide the code (`main.tex` toggle) and the PDF takes center stage at 110% zoom |
@@ -176,8 +180,9 @@ Interactive docs at `http://localhost:8000/docs` when the backend is running.
 | `/auth/onboarding` | POST | Save a new user's onboarding answers |
 | `/v2/agent/stream` | POST | Generate a document — streams SSE events (status, latex, pdf_url) |
 | `/v2/agent/async` | POST | Generate via background job; poll `/status/{job_id}` |
+| `/v2/agent/review` | POST | Review a draft (and attached papers); returns ranked suggestions |
 | `/compile` | POST | Compile arbitrary LaTeX to a PDF |
-| `/files` | POST | Upload a CSV for data-grounded generation |
+| `/files` | POST | Upload a CSV (data), image, or PDF reference paper |
 | `/documents` · `/documents/{id}/versions` | GET/POST/DELETE | Document library and version history |
 | `/conversations` | GET/DELETE/PATCH | Conversation history |
 
