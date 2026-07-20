@@ -1,8 +1,8 @@
 ﻿<div align="center">
 
-<img src="frontend/public/logo.png" alt="Particl" width="72" />
+<img src="frontend/public/logo.png" alt="Simpleton" width="72" />
 
-# Particl
+# Simpleton
 
 **Academic writing, *refined.***
 
@@ -22,9 +22,9 @@ An intelligent LaTeX writing companion that understands your research — stream
 
 ## Overview
 
-Particl removes LaTeX as a barrier. No syntax, no missing packages, no cryptic compile errors — just describe the document you need, or drop in a dataset, and watch it write itself.
+Simpleton removes LaTeX as a barrier. No syntax, no missing packages, no cryptic compile errors — just describe the document you need, or drop in a dataset, and watch it write itself.
 
-**For researchers, it's more than a formatter.** Particl is an intelligent LaTeX writing companion that understands academic research: it streamlines document structure, generates accurate mathematical syntax, reads reference papers you attach so your work is grounded in real sources, and offers contextual suggestions to elevate the quality of your academic drafts.
+**For researchers, it's more than a formatter.** Simpleton is an intelligent LaTeX writing companion that understands academic research: it streamlines document structure, generates accurate mathematical syntax, reads reference papers you attach so your work is grounded in real sources, and offers contextual suggestions to elevate the quality of your academic drafts.
 
 **How a document happens:**
 
@@ -96,7 +96,7 @@ Every type below has been verified end-to-end — real prompt → generated LaTe
 
 ```bash
 git clone https://github.com/i-mwangi/Particl.git
-cd Particl
+cd Simpleton
 ```
 
 ### 2. Backend
@@ -190,7 +190,7 @@ Interactive docs at `http://localhost:8000/docs` when the backend is running.
 ## Project Structure
 
 ```
-Particl/
+Simpleton/
 ├── backend/
 │   ├── api/            # FastAPI routes (streaming agent, compile, files)
 │   ├── auth/           # Session auth + onboarding
@@ -287,7 +287,7 @@ frontend, `SameSite=None; Secure` cookies for the cross-domain setup, and
 
 ## More Documentation
 
-- [Problem specialization](PROBLEM_SPECIALIZATION.md) — the problem Particl targets and why
+- [Problem specialization](PROBLEM_SPECIALIZATION.md) — the problem Simpleton targets and why
 - [Agent metrics](AGENT_METRICS.md) · [Benchmarks](BENCHMARKS.md)
 - [Backend API details](backend/README.md) · [Frontend notes](frontend/README.md)
 

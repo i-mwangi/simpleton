@@ -93,8 +93,8 @@ export default function Contact() {
         }}
       >
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "28px", height: "28px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
-          <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>Particl</span>
+          <img src="/logo.png" alt="Simpleton" style={{ width: "28px", height: "28px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
+          <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>Simpleton</span>
         </Link>
         <div style={{ display: "flex", gap: "32px", alignItems: "center" }}>
           <Link href="/about" style={{ color: "var(--text-secondary)", fontSize: "14px", fontWeight: "500", textDecoration: "none" }}>About</Link>
@@ -375,8 +375,8 @@ export default function Contact() {
       <footer style={{ padding: "32px 48px", borderTop: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "20px", height: "20px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
-            <span style={{ fontSize: "14px", color: "var(--text-muted)" }}>Particl</span>
+            <img src="/logo.png" alt="Simpleton" style={{ width: "20px", height: "20px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
+            <span style={{ fontSize: "14px", color: "var(--text-muted)" }}>Simpleton</span>
           </div>
           
           <div style={{ display: "flex", gap: "32px", alignItems: "center" }}>

@@ -1,10 +1,10 @@
-# Particl Agent - Problem Specialization
+# Simpleton Agent - Problem Specialization
 
 ## What Problem Does This Agent Solve?
 
 **The LaTeX Error & Complexity Crisis**
 
-Particl Agent solves the fundamental problem of **LaTeX being extremely error-prone and impossible for most people to debug or understand**.
+Simpleton Agent solves the fundamental problem of **LaTeX being extremely error-prone and impossible for most people to debug or understand**.
 
 ---
 
@@ -45,7 +45,7 @@ Particl Agent solves the fundamental problem of **LaTeX being extremely error-pr
 
 ---
 
-## Particl Solution: Agentic Self-Correction System
+## Simpleton Solution: Agentic Self-Correction System
 
 ### How It Works
 
@@ -140,7 +140,7 @@ If experts struggle, beginners have zero chance.
 - = 200M hours wasted annually
 - At $50/hour = **$10 billion/year** lost to LaTeX errors
 
-**Particl Value:** Eliminate 90% of debugging time (20 hours → 2 hours)
+**Simpleton Value:** Eliminate 90% of debugging time (20 hours → 2 hours)
 
 ---
 
@@ -304,7 +304,7 @@ This agent is a **LaTeX error-correction specialist**, not a general-purpose AI.
 
 ### Problem → Solution Comparison
 
-| Scenario | Without Particl | With Particl |
+| Scenario | Without Simpleton | With Simpleton |
 |----------|----------------|-------------|
 | **PhD Thesis** | 3 days debugging formatting errors | 2 hours, auto-corrected |
 | **Research Paper** | 8 hours fixing bibliography errors | 15 minutes, auto-compiled |
@@ -379,7 +379,7 @@ No LaTeX knowledge required. Just describe what you want.
 
 **The Problem:** LaTeX is full of cryptic errors that most people can't understand or fix. Debugging takes hours and often fails, causing missed deadlines and abandoned projects.
 
-**The Solution:** Particl Agent is an autonomous system that plans, researches, generates, compiles, and self-corrects LaTeX documents without human intervention — then goes further: it grounds documents in the user's own reference papers and **reviews drafts like a supervisor**, with ranked suggestions the agent can apply in one click.
+**The Solution:** Simpleton Agent is an autonomous system that plans, researches, generates, compiles, and self-corrects LaTeX documents without human intervention — then goes further: it grounds documents in the user's own reference papers and **reviews drafts like a supervisor**, with ranked suggestions the agent can apply in one click.
 
 **Key Innovation:** Agentic self-correction loop with 95% success rate - the agent reads error logs, understands what's wrong, fixes the code, and recompiles automatically.
 

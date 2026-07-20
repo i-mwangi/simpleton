@@ -1,15 +1,15 @@
-# Particl Agent vs Default Cursor Claude - Benchmark Comparison
+# Simpleton Agent vs Default Cursor Claude - Benchmark Comparison
 
 ## Executive Summary
 
-**Particl Agent** is a specialized AI system configured with custom rules, context, and domain knowledge for LaTeX document generation. This document compares its performance against **Default Cursor Claude** (no custom configuration).
+**Simpleton Agent** is a specialized AI system configured with custom rules, context, and domain knowledge for LaTeX document generation. This document compares its performance against **Default Cursor Claude** (no custom configuration).
 
 ---
 
 ## Test Methodology
 
 ### Test Setup
-- **Particl Agent:** With `.cursorrules` file loaded (architecture knowledge, patterns, conventions)
+- **Simpleton Agent:** With `.cursorrules` file loaded (architecture knowledge, patterns, conventions)
 - **Default Cursor Claude:** No custom rules, no project context
 - **Test Suite:** 20 tasks across 4 categories (code generation, debugging, refactoring, documentation)
 - **Scoring:** 0-10 scale per task (accuracy, speed, completeness)
@@ -24,7 +24,7 @@
 
 ## Overall Results
 
-| Metric | Particl Agent | Default Claude | Difference |
+| Metric | Simpleton Agent | Default Claude | Difference |
 |--------|--------------|----------------|------------|
 | **Average Score** | **8.7/10** | **6.2/10** | **+2.5** |
 | **Task Completion** | 19/20 (95%) | 14/20 (70%) | **+25%** |
@@ -32,7 +32,7 @@
 | **Avg Time per Task** | 4.2 min | 6.8 min | **-38%** |
 | **Code Quality Score** | 9.1/10 | 6.8/10 | **+2.3** |
 
-**Winner:** Particl Agent (40% better overall performance)
+**Winner:** Simpleton Agent (40% better overall performance)
 
 ---
 
@@ -40,37 +40,37 @@
 
 ### 1. Code Generation (5 tasks)
 
-| Task | Particl | Default | Winner |
+| Task | Simpleton | Default | Winner |
 |------|--------|---------|--------|
-| Add streaming endpoint | 9/10 | 6/10 | Particl (+50%) |
-| Implement rate limiter | 9/10 | 5/10 | Particl (+80%) |
-| Create conversation CRUD | 8/10 | 7/10 | Particl (+14%) |
-| Add error recovery loop | 10/10 | 6/10 | Particl (+67%) |
-| Build PDF compiler service | 9/10 | 7/10 | Particl (+29%) |
+| Add streaming endpoint | 9/10 | 6/10 | Simpleton (+50%) |
+| Implement rate limiter | 9/10 | 5/10 | Simpleton (+80%) |
+| Create conversation CRUD | 8/10 | 7/10 | Simpleton (+14%) |
+| Add error recovery loop | 10/10 | 6/10 | Simpleton (+67%) |
+| Build PDF compiler service | 9/10 | 7/10 | Simpleton (+29%) |
 | **Average** | **9.0/10** | **6.2/10** | **+45%** |
 
 **Key Differences:**
-- ✅ Particl knows correct middleware order (CORS → Auth)
-- ✅ Particl avoids `redis/` naming (module shadowing issue)
-- ✅ Particl uses proper Redis URL format (`rediss://` not `https://`)
+- ✅ Simpleton knows correct middleware order (CORS → Auth)
+- ✅ Simpleton avoids `redis/` naming (module shadowing issue)
+- ✅ Simpleton uses proper Redis URL format (`rediss://` not `https://`)
 - ❌ Default Claude makes common mistakes we already fixed
 
 ---
 
 ### 2. Debugging (5 tasks)
 
-| Task | Particl | Default | Winner |
+| Task | Simpleton | Default | Winner |
 |------|--------|---------|--------|
-| Fix CORS preflight errors | 10/10 | 5/10 | Particl (+100%) |
-| Resolve rate limit bypass | 9/10 | 4/10 | Particl (+125%) |
-| Fix streaming null return | 8/10 | 6/10 | Particl (+33%) |
-| Debug Celery broker URL | 10/10 | 3/10 | Particl (+233%) |
-| Fix logout session leak | 9/10 | 7/10 | Particl (+29%) |
+| Fix CORS preflight errors | 10/10 | 5/10 | Simpleton (+100%) |
+| Resolve rate limit bypass | 9/10 | 4/10 | Simpleton (+125%) |
+| Fix streaming null return | 8/10 | 6/10 | Simpleton (+33%) |
+| Debug Celery broker URL | 10/10 | 3/10 | Simpleton (+233%) |
+| Fix logout session leak | 9/10 | 7/10 | Simpleton (+29%) |
 | **Average** | **9.2/10** | **5.0/10** | **+84%** |
 
 **Key Differences:**
-- ✅ Particl immediately identifies root cause (knows project history)
-- ✅ Particl checks `.cursorrules` for common pitfalls
+- ✅ Simpleton immediately identifies root cause (knows project history)
+- ✅ Simpleton checks `.cursorrules` for common pitfalls
 - ❌ Default Claude suggests generic solutions (trial-and-error)
 - ❌ Default Claude unfamiliar with Upstash Redis specifics
 
@@ -78,36 +78,36 @@
 
 ### 3. Refactoring (5 tasks)
 
-| Task | Particl | Default | Winner |
+| Task | Simpleton | Default | Winner |
 |------|--------|---------|--------|
-| Extract compilation logic | 8/10 | 7/10 | Particl (+14%) |
-| Split large API routes file | 9/10 | 6/10 | Particl (+50%) |
-| Improve type annotations | 8/10 | 7/10 | Particl (+14%) |
-| Optimize database queries | 7/10 | 6/10 | Particl (+17%) |
-| Reduce code duplication | 9/10 | 7/10 | Particl (+29%) |
+| Extract compilation logic | 8/10 | 7/10 | Simpleton (+14%) |
+| Split large API routes file | 9/10 | 6/10 | Simpleton (+50%) |
+| Improve type annotations | 8/10 | 7/10 | Simpleton (+14%) |
+| Optimize database queries | 7/10 | 6/10 | Simpleton (+17%) |
+| Reduce code duplication | 9/10 | 7/10 | Simpleton (+29%) |
 | **Average** | **8.2/10** | **6.6/10** | **+24%** |
 
 **Key Differences:**
-- ✅ Particl follows established project patterns
-- ✅ Particl maintains consistent naming conventions
+- ✅ Simpleton follows established project patterns
+- ✅ Simpleton maintains consistent naming conventions
 - ⚠️ Default Claude introduces new patterns (inconsistent)
 
 ---
 
 ### 4. Documentation (5 tasks)
 
-| Task | Particl | Default | Winner |
+| Task | Simpleton | Default | Winner |
 |------|--------|---------|--------|
-| Write API endpoint docs | 8/10 | 7/10 | Particl (+14%) |
-| Document architecture | 9/10 | 6/10 | Particl (+50%) |
-| Create troubleshooting guide | 9/10 | 6/10 | Particl (+50%) |
-| Write deployment instructions | 8/10 | 7/10 | Particl (+14%) |
+| Write API endpoint docs | 8/10 | 7/10 | Simpleton (+14%) |
+| Document architecture | 9/10 | 6/10 | Simpleton (+50%) |
+| Create troubleshooting guide | 9/10 | 6/10 | Simpleton (+50%) |
+| Write deployment instructions | 8/10 | 7/10 | Simpleton (+14%) |
 | Update README.md | 8/10 | 8/10 | Tie |
 | **Average** | **8.4/10** | **6.8/10** | **+24%** |
 
 **Key Differences:**
-- ✅ Particl includes project-specific details (Redis naming, middleware order)
-- ✅ Particl references actual file paths and line numbers
+- ✅ Simpleton includes project-specific details (Redis naming, middleware order)
+- ✅ Simpleton references actual file paths and line numbers
 - ❌ Default Claude provides generic documentation
 
 ---
@@ -118,7 +118,7 @@
 
 **Prompt:** "Add rate limiting to the API (60 requests per minute)"
 
-**Particl Agent Output:**
+**Simpleton Agent Output:**
 ```python
 # Correct implementation (atomic, no race condition)
 async def rate_limit_middleware(request: Request, call_next):
@@ -158,7 +158,7 @@ async def rate_limit_middleware(request: Request, call_next):
 
 **Prompt:** "Users getting CORS errors on login endpoint"
 
-**Particl Agent Response:**
+**Simpleton Agent Response:**
 > "The issue is middleware order. AuthMiddleware is returning 401 before CORSMiddleware can add headers. Reverse the order in main.py:
 > ```python
 > app.add_middleware(CORSMiddleware)  # FIRST
@@ -183,7 +183,7 @@ async def rate_limit_middleware(request: Request, call_next):
 
 **Prompt:** "Celery workers not connecting to Upstash Redis"
 
-**Particl Agent Response:**
+**Simpleton Agent Response:**
 > "Use the Redis wire protocol URL, not the REST API URL:
 > ```python
 > # CORRECT
@@ -209,7 +209,7 @@ async def rate_limit_middleware(request: Request, call_next):
 
 ## Performance Analysis
 
-### Where Particl Agent Excels
+### Where Simpleton Agent Excels
 
 1. **Project-Specific Knowledge** (+100%)
    - Knows all critical bugs we've fixed
@@ -254,30 +254,30 @@ async def rate_limit_middleware(request: Request, call_next):
 
 ### Development Speed
 
-| Task Type | Particl Agent | Default Claude | Time Saved |
+| Task Type | Simpleton Agent | Default Claude | Time Saved |
 |-----------|--------------|----------------|------------|
 | Bug fixing | 3 min avg | 8 min avg | **63%** |
 | Feature implementation | 12 min avg | 18 min avg | **33%** |
 | Code review | 2 min avg | 5 min avg | **60%** |
 | Documentation | 5 min avg | 8 min avg | **38%** |
 
-**Total Time Saved:** ~45% faster development with Particl Agent
+**Total Time Saved:** ~45% faster development with Simpleton Agent
 
 ### Error Prevention
 
-| Error Type | Particl Agent | Default Claude |
+| Error Type | Simpleton Agent | Default Claude |
 |------------|--------------|----------------|
 | Introduces known bugs | 0/20 | 7/20 |
 | Missing error handling | 1/20 | 8/20 |
 | Violates conventions | 2/20 | 11/20 |
 
-**Error Reduction:** 82% fewer mistakes with Particl Agent
+**Error Reduction:** 82% fewer mistakes with Simpleton Agent
 
 ---
 
 ## Conclusion
 
-**Particl Agent outperforms Default Cursor Claude by 40%** across all categories due to:
+**Simpleton Agent outperforms Default Cursor Claude by 40%** across all categories due to:
 
 1. **Domain Knowledge:** Understands LaTeX compilation, LangGraph patterns, streaming SSE
 2. **Project Context:** Knows architecture, fixed bugs, naming conventions
@@ -287,4 +287,4 @@ async def rate_limit_middleware(request: Request, call_next):
 
 **ROI:** The `.cursorrules` configuration delivers 45% faster development and 82% fewer errors, making it essential for production-grade development on this project.
 
-**Recommendation:** Always use Particl Agent (with .cursorrules) for this project. Default Claude should only be used for generic programming tasks unrelated to Particl.
+**Recommendation:** Always use Simpleton Agent (with .cursorrules) for this project. Default Claude should only be used for generic programming tasks unrelated to Simpleton.

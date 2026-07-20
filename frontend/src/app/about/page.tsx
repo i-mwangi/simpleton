@@ -37,7 +37,7 @@ export default function About() {
             </text>
           </svg>
           <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>
-            Particl
+            Simpleton
           </span>
         </Link>
         <div style={{ display: "flex", gap: "32px", alignItems: "center" }}>
@@ -70,7 +70,7 @@ export default function About() {
       <main style={{ flex: 1, paddingTop: "120px" }}>
         <section style={{ padding: "80px 48px", maxWidth: "900px", margin: "0 auto" }}>
           <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: "700", color: "var(--text-primary)", marginBottom: "24px", letterSpacing: "-1px" }}>
-            About Particl
+            About Simpleton
           </h1>
           
           <div style={{ display: "flex", flexDirection: "column", gap: "32px", marginTop: "48px" }}>
@@ -88,7 +88,7 @@ export default function About() {
                 The Solution
               </h2>
               <p style={{ fontSize: "16px", lineHeight: "1.8", color: "var(--text-secondary)" }}>
-                Particl is an autonomous document generation system. Describe what you need in plain English — our AI agent plans the structure, generates the LaTeX code, compiles it, and self-corrects any errors automatically. No LaTeX knowledge required.
+                Simpleton is an autonomous document generation system. Describe what you need in plain English — our AI agent plans the structure, generates the LaTeX code, compiles it, and self-corrects any errors automatically. No LaTeX knowledge required.
               </p>
             </div>
 
@@ -125,7 +125,7 @@ export default function About() {
                 The Vision
               </h2>
               <p style={{ fontSize: "16px", lineHeight: "1.8", color: "var(--text-secondary)" }}>
-                We believe everyone should have access to professional-quality document formatting. Particl eliminates LaTeX as a barrier, letting researchers, students, and professionals focus on what matters — the content itself.
+                We believe everyone should have access to professional-quality document formatting. Simpleton eliminates LaTeX as a barrier, letting researchers, students, and professionals focus on what matters — the content itself.
               </p>
             </div>
 
@@ -175,7 +175,7 @@ export default function About() {
                 textDecoration: "none",
               }}
             >
-              Try Particl free
+              Try Simpleton free
             </Link>
           </div>
         </section>
@@ -206,7 +206,7 @@ export default function About() {
               LV
             </text>
           </svg>
-          <span style={{ fontSize: "14px", color: "var(--text-muted)" }}>Particl</span>
+          <span style={{ fontSize: "14px", color: "var(--text-muted)" }}>Simpleton</span>
         </div>
         <div style={{ fontSize: "14px", color: "var(--text-muted)" }}>
           Built for professional document creation

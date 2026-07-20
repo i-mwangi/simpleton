@@ -1,4 +1,4 @@
--- Particl database schema
+-- Simpleton database schema
 -- Run this in the Supabase SQL Editor (Dashboard -> SQL Editor -> New query -> Run)
 -- Columns match what the backend code reads/writes:
 --   db/users.py, db/queries.py, db/versions.py, auth/routes.py

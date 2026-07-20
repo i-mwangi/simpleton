@@ -195,17 +195,16 @@ export default function AgentPanel({
           width: "48px",
           height: "48px",
           borderRadius: "50%",
-          border: "1px solid var(--border)",
-          background: "#3a3226",
+          border: "none",
+          padding: 0,
+          background: "transparent",
           cursor: "pointer",
           zIndex: 90,
           boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
-        <img src="/logo.png" alt="Particl" style={{ width: "62%", height: "62%", objectFit: "contain" }} />
+        <img src="/logo.png" alt="Simpleton" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
       </button>
     );
   }

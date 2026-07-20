@@ -1,4 +1,4 @@
-# Particl Agent Performance Metrics
+# Simpleton Agent Performance Metrics
 
 ## Overall Performance Score: **8,247 / 10,000**
 
@@ -178,7 +178,7 @@
 ## Performance Tier
 
 - 9,000-10,000: World-class (Top 1%)
-- **8,000-8,999: Excellent (Top 10%)** ← **Particl is here**
+- **8,000-8,999: Excellent (Top 10%)** ← **Simpleton is here**
 - 7,000-7,999: Good (Top 25%)
 - 6,000-6,999: Above Average (Top 50%)
 
@@ -198,7 +198,7 @@
 
 ## Industry Comparison
 
-| Metric | Particl | Overleaf | LaTeX-GPT |
+| Metric | Simpleton | Overleaf | LaTeX-GPT |
 |--------|--------|----------|-----------|
 | Code Generation | 89% | N/A | 82% |
 | Auto-correction | 95% | 0% | 78% |
@@ -208,4 +208,4 @@
 
 *Manual editing by users
 
-**Conclusion:** Particl achieves **8,247/10,000 (82.47%)**, ranking in the **Excellent (Top 10%)** tier with particularly strong autonomous error correction and compilation success.
+**Conclusion:** Simpleton achieves **8,247/10,000 (82.47%)**, ranking in the **Excellent (Top 10%)** tier with particularly strong autonomous error correction and compilation success.

@@ -139,20 +139,18 @@ const SOURCES = [
 
 function Logo({ size = 32 }: { size?: number }) {
   return (
-    <span
+    <img
+      src="/logo.png"
+      alt="Simpleton"
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
         width: `${size}px`,
         height: `${size}px`,
         borderRadius: `${Math.max(6, size * 0.19)}px`,
-        background: "#3a3226",
+        objectFit: "cover",
         flexShrink: 0,
+        display: "block",
       }}
-    >
-      <img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} />
-    </span>
+    />
   );
 }
 
@@ -309,7 +307,7 @@ export default function OnboardingPage() {
             <Logo size={72} />
             <p style={{ marginTop: "44px", fontSize: "20px", color: "var(--text-secondary)" }}>Welcome to</p>
             <h1 className="px-font" style={{ fontSize: "56px", fontWeight: 700, color: "var(--text-primary)", marginTop: "6px" }}>
-              Particl
+              Simpleton
             </h1>
             <p
               style={{
@@ -330,10 +328,10 @@ export default function OnboardingPage() {
           <div style={{ width: "100%", maxWidth: "500px", animation: "fadeUp 0.4s ease", paddingBottom: "8vh" }}>
             <div style={{ textAlign: "center", marginBottom: "32px" }}>
               <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
-                What are you using Particl for?
+                What are you using Simpleton for?
               </h1>
               <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
-                Help us understand how you plan to use Particl
+                Help us understand how you plan to use Simpleton
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px" }}>
@@ -352,7 +350,7 @@ export default function OnboardingPage() {
                 type="text"
                 value={useCaseOther}
                 onChange={(e) => setUseCaseOther(e.target.value)}
-                placeholder="Tell us what you'll use Particl for"
+                placeholder="Tell us what you'll use Simpleton for"
                 autoFocus
                 style={{
                   width: "100%",
@@ -395,7 +393,7 @@ export default function OnboardingPage() {
           <div style={{ width: "100%", maxWidth: "500px", animation: "fadeUp 0.4s ease", paddingBottom: "8vh" }}>
             <div style={{ textAlign: "center", marginBottom: "32px" }}>
               <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
-                How did you find out about Particl?
+                How did you find out about Simpleton?
               </h1>
               <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
                 We&apos;d love to know how you discovered us
@@ -475,7 +473,7 @@ export default function OnboardingPage() {
               You&apos;re all set!
             </h1>
             <p style={{ fontSize: "15px", color: "var(--text-secondary)", marginTop: "10px" }}>
-              Your Particl account is ready to go.
+              Your Simpleton account is ready to go.
             </p>
             <p style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "28px" }}>Redirecting you...</p>
           </div>

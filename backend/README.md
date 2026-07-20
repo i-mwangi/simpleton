@@ -1,4 +1,4 @@
-# Particl Backend
+# Simpleton Backend
 
 FastAPI service that turns natural-language prompts into compiled LaTeX PDFs. It
 orchestrates a Qwen-powered agent that **plans → generates → compiles → fixes its

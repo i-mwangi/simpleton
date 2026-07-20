@@ -1,6 +1,6 @@
-# Particl Frontend
+# Simpleton Frontend
 
-Next.js (App Router) client for Particl — the interface where you describe a
+Next.js (App Router) client for Simpleton — the interface where you describe a
 document, watch the LaTeX stream in, see the PDF compile beside it, refine by
 conversation, and **review** the draft for academic quality.
 

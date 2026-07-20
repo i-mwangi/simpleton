@@ -113,7 +113,7 @@ export default function Sidebar({ onSelectConversation, onNewChat, currentConver
           alignItems: "center",
         }}>
           <h2 style={{ fontSize: "16px", fontWeight: "600", color: "var(--text-primary)" }}>
-            Particl
+            Simpleton
           </h2>
           <button
             onClick={onClose}

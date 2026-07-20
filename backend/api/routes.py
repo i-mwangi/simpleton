@@ -705,9 +705,9 @@ class ContactRequest(BaseModel):
 async def contact_form(data: ContactRequest):
     contact_email = "quantumbyte.co.in@gmail.com"
 
-    subject = f"[Particl Contact] {data.subject}"
+    subject = f"[Simpleton Contact] {data.subject}"
     body = f"""
-New contact form submission from Particl website:
+New contact form submission from Simpleton website:
 
 Name: {data.name}
 Email: {data.email}
@@ -717,7 +717,7 @@ Message:
 {data.message}
 
 ---
-This message was sent via the Particl contact form.
+This message was sent via the Simpleton contact form.
     """
 
     print(f"[CONTACT FORM] New submission from {data.name} ({data.email})")

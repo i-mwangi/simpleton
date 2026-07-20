@@ -808,9 +808,9 @@ export default function EditorPage() {
               padding: "4px 8px 4px 0",
             }}
           >
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "24px", height: "24px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
+            <img src="/logo.png" alt="Simpleton" style={{ width: "24px", height: "24px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
             <span className="brand-word" style={{ fontSize: "15px", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "0.02em" }}>
-              Particl
+              Simpleton
             </span>
           </button>
           <span className="project-name" style={{

@@ -47,8 +47,8 @@ export default function LoginPage() {
       >
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
-            <span className="px-font" style={{ fontSize: "20px", fontWeight: "700", color: "var(--text-primary)" }}>Particl</span>
+            <img src="/logo.png" alt="Simpleton" style={{ width: "32px", height: "32px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
+            <span className="px-font" style={{ fontSize: "20px", fontWeight: "700", color: "var(--text-primary)" }}>Simpleton</span>
           </Link>
         </div>
 

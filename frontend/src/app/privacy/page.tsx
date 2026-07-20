@@ -21,8 +21,8 @@ export default function Privacy() {
         }}
       >
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "28px", height: "28px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
-          <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>Particl</span>
+          <img src="/logo.png" alt="Simpleton" style={{ width: "28px", height: "28px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
+          <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>Simpleton</span>
         </Link>
       </header>
 
@@ -85,7 +85,7 @@ export default function Privacy() {
       </main>
 
       <footer style={{ padding: "32px 48px", borderTop: "1px solid var(--border-subtle)", textAlign: "center" }}>
-        <p style={{ fontSize: "14px", color: "var(--text-muted)" }}>Particl - Built for professional document creation</p>
+        <p style={{ fontSize: "14px", color: "var(--text-muted)" }}>Simpleton - Built for professional document creation</p>
       </footer>
     </div>
   );

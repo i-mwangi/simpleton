@@ -1,7 +1,7 @@
-# Particl backend: FastAPI + TeX Live (pdflatex) in one image.
+# Simpleton backend: FastAPI + TeX Live (pdflatex) in one image.
 FROM python:3.13-slim
 
-# --- System deps: a curated TeX Live that covers every package Particl uses ---
+# --- System deps: a curated TeX Live that covers every package Simpleton uses ---
 # (pdflatex, beamer, tikz/pgfplots, pgfgantt, pgf-pie, quantikz, siunitx,
 #  listings, booktabs, fancyhdr, geometry, helvet, rotating, marginnote,
 #  underscore, ...). This is ~2 GB - far smaller than texlive-full (~5 GB).

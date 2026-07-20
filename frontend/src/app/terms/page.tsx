@@ -21,8 +21,8 @@ export default function Terms() {
         }}
       >
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "28px", height: "28px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}><img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} /></span>
-          <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>Particl</span>
+          <img src="/logo.png" alt="Simpleton" style={{ width: "28px", height: "28px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
+          <span style={{ fontSize: "17px", fontWeight: "600", color: "var(--text-primary)" }}>Simpleton</span>
         </Link>
       </header>
 
@@ -38,12 +38,12 @@ export default function Terms() {
           <div style={{ display: "flex", flexDirection: "column", gap: "32px", color: "var(--text-secondary)", fontSize: "15px", lineHeight: "1.8" }}>
             <section>
               <h2 style={{ fontSize: "18px", fontWeight: "600", color: "var(--text-primary)", marginBottom: "12px" }}>Acceptance of Terms</h2>
-              <p>By accessing or using Particl, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.</p>
+              <p>By accessing or using Simpleton, you agree to be bound by these Terms of Service. If you do not agree, do not use the service.</p>
             </section>
 
             <section>
               <h2 style={{ fontSize: "18px", fontWeight: "600", color: "var(--text-primary)", marginBottom: "12px" }}>Use of Service</h2>
-              <p>Particl provides AI-powered LaTeX document generation. You agree to use the service for lawful purposes only and not to generate content that violates laws or regulations.</p>
+              <p>Simpleton provides AI-powered LaTeX document generation. You agree to use the service for lawful purposes only and not to generate content that violates laws or regulations.</p>
             </section>
 
             <section>
@@ -53,17 +53,17 @@ export default function Terms() {
 
             <section>
               <h2 style={{ fontSize: "18px", fontWeight: "600", color: "var(--text-primary)", marginBottom: "12px" }}>Service Availability</h2>
-              <p>We strive to keep Particl available, but do not guarantee uninterrupted access. The service may be temporarily unavailable for maintenance or updates.</p>
+              <p>We strive to keep Simpleton available, but do not guarantee uninterrupted access. The service may be temporarily unavailable for maintenance or updates.</p>
             </section>
 
             <section>
               <h2 style={{ fontSize: "18px", fontWeight: "600", color: "var(--text-primary)", marginBottom: "12px" }}>Intellectual Property</h2>
-              <p>Generated documents are yours. You retain full ownership of content created using Particl. We may use anonymized data to improve our service.</p>
+              <p>Generated documents are yours. You retain full ownership of content created using Simpleton. We may use anonymized data to improve our service.</p>
             </section>
 
             <section>
               <h2 style={{ fontSize: "18px", fontWeight: "600", color: "var(--text-primary)", marginBottom: "12px" }}>Limitation of Liability</h2>
-              <p>Particl is provided &quot;as is&quot; without warranties. We are not liable for any damages arising from use of the service.</p>
+              <p>Simpleton is provided &quot;as is&quot; without warranties. We are not liable for any damages arising from use of the service.</p>
             </section>
 
             <section>
@@ -80,7 +80,7 @@ export default function Terms() {
       </main>
 
       <footer style={{ padding: "32px 48px", borderTop: "1px solid var(--border-subtle)", textAlign: "center" }}>
-        <p style={{ fontSize: "14px", color: "var(--text-muted)" }}>Particl - Built for professional document creation</p>
+        <p style={{ fontSize: "14px", color: "var(--text-muted)" }}>Simpleton - Built for professional document creation</p>
       </footer>
     </div>
   );

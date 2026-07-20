@@ -82,11 +82,9 @@ export default function Home() {
       <div style={{ position: "relative", zIndex: 1, maxWidth: "760px", margin: "0 auto", textAlign: "center", paddingTop: "40px" }}>
         {/* Centered brand */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "28px" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "30px", height: "30px", borderRadius: "6px", background: "#3a3226", flexShrink: 0 }}>
-            <img src="/logo.png" alt="Particl" style={{ width: "78%", height: "78%", objectFit: "contain" }} />
-          </span>
+          <img src="/logo.png" alt="Simpleton" style={{ width: "30px", height: "30px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />
           <span className="px-font" style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "0.04em", color: "var(--text-primary)" }}>
-            Particl
+            Simpleton
           </span>
         </div>
 
@@ -196,11 +194,6 @@ export default function Home() {
           </button>
         </div>
 
-        <div style={{ display: "flex", gap: "14px", justifyContent: "center", marginTop: "32px" }}>
-          <Link href="/register" className="pill-btn pill-btn-primary" style={{ padding: "12px 28px", fontSize: "14px" }}>
-            Get started&nbsp;&rsaquo;
-          </Link>
-        </div>
       </div>
     </div>
   );
