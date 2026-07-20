@@ -211,7 +211,7 @@ Particl/
 **Live production setup — all on Alibaba Cloud for the compute side:**
 
 - **Frontend** → **Vercel** (`particl-rho.vercel.app`). Root directory `frontend`; set `NEXT_PUBLIC_API_URL` to the backend URL (baked in at build time — redeploy after changing it).
-- **Backend** → **Alibaba Cloud ECS** (Elastic Compute Service, Linux). The Docker image (FastAPI + TeX Live, see [`backend/Dockerfile`](backend/Dockerfile)) is built by **GitHub Actions** on every `backend/**` change (see [`.github/workflows/build-backend.yml`](.github/workflows/build-backend.yml)) and pushed to **Alibaba Cloud Container Registry (ACR)**; the ECS instance pulls the image and runs it behind HTTPS. Secrets and runtime config (`FRONTEND_ORIGIN`, `COOKIE_SAMESITE=none`, `COOKIE_SECURE=true`, `LATEX_MAX_MEMORY_MB`) are supplied as environment variables to the container.
+- **Backend** → **Alibaba Cloud ECS** (Elastic Compute Service, Linux). The Docker image (FastAPI + TeX Live, see [`backend/Dockerfile`](backend/Dockerfile)) is built on the ECS instance itself from this repo and run as a container behind HTTPS. Secrets and runtime config (`FRONTEND_ORIGIN`, `COOKIE_SAMESITE=none`, `COOKIE_SECURE=true`, `LATEX_MAX_MEMORY_MB`) are supplied as environment variables to the container. A GitHub Actions workflow ([`.github/workflows/build-backend.yml`](.github/workflows/build-backend.yml)) is scaffolded for pushing to a container registry once one is wired up.
 - **LLM** → **Alibaba Cloud Model Studio** (Qwen 3.7 via the DashScope OpenAI-compatible API) — the LLM backbone for generation, self-correction, and the review agent.
 - **Database & storage** → **Supabase**: run `backend/db/schema.sql` once; create a public-read `pdfs` storage bucket.
 - **Sessions & rate limiting** → **Upstash Redis**.
@@ -253,9 +253,8 @@ The Alibaba Cloud API integration is instantiated in [`backend/graph/nodes.py`](
      └──────────────┘ └──────────┘ └───────────────┘ └──────────────┘
 
      Deploy pipeline:
-       GitHub push (backend/**) ─► GitHub Actions builds Dockerfile ─►
-       push to Alibaba Cloud Container Registry (ACR) ─► ECS pulls image
-       (:latest or :sha) ─► `docker run`
+       git clone / git pull on the ECS VM ─► `docker build` from
+       backend/Dockerfile ─► `docker run` with env vars from a .env file
 ```
 
 **Reading it:** the browser talks only to Vercel and to the backend on ECS. The backend fans out to four services — **Qwen (Alibaba Model Studio)** for the LLM, **Supabase Postgres** for records, **Supabase Storage** for the compiled PDFs, and **Upstash Redis** for sessions/rate limits/upload caches. `pdflatex` runs inside the same container as the FastAPI process; that's why the backend must be a container host, not serverless.

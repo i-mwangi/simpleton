@@ -1,20 +1,19 @@
 name: Build backend image
 
-# Builds backend/Dockerfile (FastAPI + TeX Live) and pushes it to Alibaba Cloud
-# Container Registry (ACR), so the ECS instance can pull it. Runs on backend
-# changes or manually from the Actions tab.
+# SCAFFOLD - manual trigger only. Wire up a container registry before enabling.
 #
-# Requires four repository secrets (Settings -> Secrets and variables -> Actions):
+# The live deployment currently builds the image directly on the ECS VM
+# (`git pull` + `docker build`), so no push-to-registry step is needed for the
+# demo. This workflow is left in the repo as ready-to-enable scaffolding: once
+# a container registry (Alibaba Cloud ACR, Docker Hub, etc.) is wired up, add
+# the four secrets below and re-enable the `push` trigger.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
 #   ACR_REGISTRY  - e.g. registry-intl.ap-southeast-1.aliyuncs.com
-#   ACR_NAMESPACE - the ACR namespace you created
-#   ACR_USERNAME  - the ACR credential username
-#   ACR_PASSWORD  - the ACR credential password (or an access token)
+#   ACR_NAMESPACE - the registry namespace
+#   ACR_USERNAME  - the registry credential username
+#   ACR_PASSWORD  - the registry credential password (or an access token)
 on:
-  push:
-    branches: [main]
-    paths:
-      - "backend/**"
-      - ".github/workflows/build-backend.yml"
   workflow_dispatch:
 
 jobs:
