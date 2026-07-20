@@ -237,9 +237,9 @@ export default function AppDashboard() {
           <em style={{ color: "var(--text-primary)" }}>themselves.</em>
         </h1>
         <p style={{ fontSize: "15px", color: "var(--text-muted)", marginBottom: "36px" }}>
-          The intelligent LaTeX companion that understands your data.
+          An intelligent LaTeX writing companion that understands your research streamlining structure,
           <br />
-          Upload a dataset or describe what you need to get started.
+          getting the mathematics right, reading your reference papers, and offering contextual suggestions to elevate your drafts.
         </p>
 
         {/* Dropzone */}
